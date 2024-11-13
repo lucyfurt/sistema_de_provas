@@ -26,7 +26,7 @@ function App() {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setUser(user);
-        setIsProfessor(user.email === 'luciana.furtado@ifma.edu.br'); 
+        setIsProfessor(user.email === 'eva.carneiro@ifma.edu.br'); 
       } else {
         setUser(null);
         setIsProfessor(false);
