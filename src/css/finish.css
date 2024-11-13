@@ -1,0 +1,50 @@
+/* Centraliza o conteúdo e define o layout */
+.finish-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f7fc; /* Cor de fundo suave */
+  font-family: 'Arial', sans-serif; /* Fonte limpa */
+}
+
+.finish-screen h2 {
+  color: #4CAF50; /* Cor verde para destaque */
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.finish-screen .thank-you-message {
+  color: #4CAF50;
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.finish-screen .result-title {
+  color: #333;
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.finish-screen .result-score {
+  color: #555;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.finish-screen .send-button {
+  background-color: #4CAF50; /* Cor verde para o botão */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.finish-screen .send-button:hover {
+  background-color: #45a049; 
+}

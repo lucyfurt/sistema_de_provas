@@ -1,0 +1,12 @@
+specVersion: "v1beta"
+serviceId: "prova-historia"
+location: "us-central1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "prova-historia-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]

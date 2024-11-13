@@ -1,0 +1,69 @@
+/* src/questionScreen.css */
+.question-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  background-color: #f4f4f4;
+}
+
+h2 {
+  font-size: 2em;
+  color: #333;
+}
+
+.timer {
+  font-size: 1.2em;
+  color: #ff0000;
+  margin-bottom: 20px;
+}
+
+.question {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.question h3 {
+  font-size: 1.5em;
+  color: #555;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+
+.option {
+  font-size: 1em;
+  margin: 5px 0;
+  display: flex;
+  align-items: center;
+}
+
+.option input {
+  margin-right: 8px;
+}
+
+.finish-button {
+  padding: 10px 20px;
+  font-size: 1.1em;
+  color: #fff;
+  background-color: #4285f4;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.finish-button:hover {
+  background-color: #357ae8;
+}
