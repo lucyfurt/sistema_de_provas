@@ -1,8 +1,7 @@
-// src/screens/Dashboard.js
 import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import AddProvaScreen from './AddProvaScreen';
-//import TurmasScreen from './TurmasScreen';
+import AlunosNotasScreen from './AlunosNotasScreen';
 
 const Dashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState('overview');
@@ -11,8 +10,8 @@ const Dashboard = () => {
     switch (selectedMenu) {
       case 'addProva':
         return <AddProvaScreen />;
-     // case 'listarTurmas':
-      //  return <TurmasScreen />;
+      case 'listarNotas':
+        return <AlunosNotasScreen />;
       case 'overview':
         return <div>Visão Geral do Dashboard</div>;
       default:

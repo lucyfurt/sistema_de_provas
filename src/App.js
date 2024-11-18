@@ -63,6 +63,7 @@ function App() {
     try {
       await addDoc(collection(db, 'resultados'), {
         aluno: aluno.nome,
+        curso: aluno.curso,
         prova: nomeProvaSelecionada,
         respostas,
         nota: pontos,

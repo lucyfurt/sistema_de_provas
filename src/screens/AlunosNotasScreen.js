@@ -1,4 +1,3 @@
-// src/AlunosNotasScreen.js
 import React, { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import { collection, getDocs } from "firebase/firestore";
@@ -10,7 +9,7 @@ const AlunosNotasScreen = () => {
   useEffect(() => {
     const fetchAlunos = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'provas'));
+        const querySnapshot = await getDocs(collection(db, 'resultados'));
         const alunosList = querySnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
@@ -45,7 +44,7 @@ const AlunosNotasScreen = () => {
               <tr key={aluno.id}>
                 <td>{aluno.aluno}</td>
                 <td>{aluno.curso}</td>
-                <td>{aluno.nomeProva}</td> 
+                <td>{aluno.prova}</td> 
                 <td>{aluno.nota}</td>
                 <td>{new Date(aluno.timestamp.seconds * 1000).toLocaleString()}</td>
               </tr>
