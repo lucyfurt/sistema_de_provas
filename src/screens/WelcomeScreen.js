@@ -1,6 +1,6 @@
 // src/WelcomeScreen.js
 import React, { useState } from 'react';
-import './css/welcome.css';
+import '../css/welcome.css';
 
 const WelcomeScreen = ({ setAluno }) => {
   const [nome, setNome] = useState('');

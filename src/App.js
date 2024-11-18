@@ -1,32 +1,32 @@
-// src/App.js
 import React, { useState, useEffect } from 'react';
-import { auth } from './firebase';
-import LoginScreen from './LoginScreen';
-import WelcomeScreen from './WelcomeScreen';
-import QuestionScreen from './QuestionScreen';
-import FinishScreen from './FinishScreen';
-import AlunosNotasScreen from './AlunosNotasScreen';
-import MenuSelecaoProva from './provas/MenuSelecaoProvas';  
-
+import { auth, db } from './firebase';
+import { collection, getDocs, addDoc } from 'firebase/firestore';
+import LoginScreen from './screens/LoginScreen';
+import WelcomeScreen from './screens/WelcomeScreen';
+import QuestionScreen from './screens/QuestionScreen';
+import FinishScreen from './screens/FinishScreen';
+import DashboardScreen from './screens/DashboardScreen';
+import ProvasDisponiveis from './screens/ProvasDisponiveis';
 
 // Importa função para cálculo da nota
 import calculaNota from './utils/calculaNota';
 
 function App() {
   const [user, setUser] = useState(null);            
-  const [aluno, setAluno] = useState({});             
+  const [aluno, setAluno] = useState({});              
   const [respostas, setRespostas] = useState([]);     
-  const [nota, setNota] = useState(0);               
+  const [nota, setNota] = useState(0);                
   const [isProfessor, setIsProfessor] = useState(false); 
+  const [provas, setProvas] = useState([]); 
   const [provaSelecionada, setProvaSelecionada] = useState(null); 
   const [nomeProvaSelecionada, setNomeProvaSelecionada] = useState(""); 
- 
+
   // Verifica se o usuário é professor ou aluno
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setUser(user);
-        setIsProfessor(user.email === 'eva.carneiro@ifma.edu.br'); 
+        setIsProfessor(user.email === 'luciana.furtado@ifma.edu.br'); 
       } else {
         setUser(null);
         setIsProfessor(false);
@@ -35,31 +35,62 @@ function App() {
     return unsubscribe;
   }, []);
 
+  // Busca provas do Firestore
+  useEffect(() => {
+    const fetchProvas = async () => {
+      try {
+        const provasSnapshot = await getDocs(collection(db, 'provas'));
+        const provasData = provasSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setProvas(provasData);
+      } catch (error) {
+        console.error("Erro ao buscar provas:", error);
+      }
+    };
+    fetchProvas();
+  }, []);
+
   // Função chamada ao finalizar a prova
-  const handleProvaFinalizada = (respostas) => {
+  const handleProvaFinalizada = async (respostas) => {
     console.log("Prova finalizada com as respostas:", respostas);
-    const pontos = calculaNota(provaSelecionada, respostas);
+    const pontos = calculaNota(provaSelecionada.questoes, respostas);
     setNota(pontos);
     setRespostas(respostas);
+
+    // Salvar as respostas no Firestore
+    try {
+      await addDoc(collection(db, 'resultados'), {
+        aluno: aluno.nome,
+        prova: nomeProvaSelecionada,
+        respostas,
+        nota: pontos,
+        timestamp: new Date(),
+      });
+      console.log("Respostas armazenadas com sucesso!");
+    } catch (error) {
+      console.error("Erro ao armazenar respostas:", error);
+    }
   };
 
-// Alternância de provas pelo menu de seleção
-const selecionarProva = (prova, nomeProva) => {
-  setProvaSelecionada(prova);
-  setNomeProvaSelecionada(nomeProva);
-  setRespostas([]); 
-  setNota(0);       
-};
+  // Alternância de provas pelo menu de seleção
+  const selecionarProva = (prova) => {
+    setProvaSelecionada(prova);
+    setNomeProvaSelecionada(prova.titulo);
+    setRespostas([]); 
+    setNota(0);       
+  };
 
   // Renderização condicional das telas
   if (!user) return <LoginScreen />;
-  if (isProfessor) return <AlunosNotasScreen />;
+  if (isProfessor) return <DashboardScreen />;
   if (!aluno.nome) return <WelcomeScreen setAluno={setAluno} />;
-  if (!provaSelecionada) return <MenuSelecaoProva selecionarProva={selecionarProva} />;
+  if (!provaSelecionada) return <ProvasDisponiveis provas={provas} selecionarProva={selecionarProva} />;
   if (respostas.length === 0) {
     return (
       <QuestionScreen 
-        questoes={provaSelecionada} 
+        questoes={provaSelecionada.questoes} 
         tempoMaximo={1800}  
         onProvaFinalizada={handleProvaFinalizada} 
       />
@@ -67,14 +98,7 @@ const selecionarProva = (prova, nomeProva) => {
   }
 
   return (
-    <FinishScreen 
-      aluno={aluno} 
-      respostas={respostas} 
-      questoes={provaSelecionada} 
-      nomeProva={nomeProvaSelecionada} 
-      nota={nota} 
-    />
-
+    <FinishScreen />
   );
 }
 

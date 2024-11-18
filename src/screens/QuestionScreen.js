@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './css/question.css';
+import '../css/question.css';
 
 const QuestionScreen = ({ questoes, tempoMaximo, onProvaFinalizada }) => {
   const [respostas, setRespostas] = useState({});
@@ -34,21 +34,21 @@ const QuestionScreen = ({ questoes, tempoMaximo, onProvaFinalizada }) => {
 
   return (
     <div className="question-screen">
-      <h2>Prova de História</h2>
+      <h2>Prova de {questoes[0]?.disciplina || "História"}</h2>
       <div className="timer">Tempo restante: {formatarTempo(tempoRestante)}</div>
       
       {questoes.map((questao) => (
         <div key={questao.id} className="question">
           <h3>{questao.pergunta}</h3>
           <div className="options">
-            {questao.opcoes.map((opcao) => (
-              <label key={opcao.id} className="option">
+            {questao.opcoes.map((opcao, index) => (
+              <label key={index} className="option">
                 <input
                   type="checkbox"
-                  checked={respostas[questao.id] === opcao.id}
-                  onChange={() => handleChange(questao.id, opcao.id)}
+                  checked={respostas[questao.id] === opcao}
+                  onChange={() => handleChange(questao.id, opcao)}
                 />
-                {opcao.texto}
+                {opcao}
               </label>
             ))}
           </div>

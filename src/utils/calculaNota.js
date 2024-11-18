@@ -1,17 +1,17 @@
-// src/utils/calculaNota.js
-const calculaNota = (prova, respostas) => {
+const calculaNota = (questoes, respostas) => {
   let nota = 0;
 
-  prova.forEach((questao) => {
-    const respostaAluno = respostas[questao.id];
+  // Percorre todas as questões da prova
+  questoes.forEach((questao) => {
+    const respostaAluno = respostas[questao.id];  // Resposta do aluno para a questão
     
-    // Verifique se a resposta do aluno existe e se corresponde à resposta correta
-    if (respostaAluno && respostaAluno === questao.respostaCorreta) {
-      nota += 1; // Incrementa a nota em 1 ponto para cada resposta correta
+    // Verifica se a resposta do aluno corresponde à resposta correta
+    if (respostaAluno && respostaAluno === questao.correta) {
+      nota += 1;  // Incrementa 1 ponto por resposta correta
     }
   });
 
-  return nota;
+  return nota;  // Retorna a nota final
 };
 
 export default calculaNota;

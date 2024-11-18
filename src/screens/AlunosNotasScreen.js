@@ -1,8 +1,8 @@
 // src/AlunosNotasScreen.js
 import React, { useEffect, useState } from 'react';
-import { db } from './firebase';
+import { db } from '../firebase';
 import { collection, getDocs } from "firebase/firestore";
-import './css/AlunosNotasScreen.css';
+import '../css/AlunosNotasScreen.css';
 
 const AlunosNotasScreen = () => {
   const [alunos, setAlunos] = useState([]);

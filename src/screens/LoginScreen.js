@@ -1,8 +1,8 @@
 import React from 'react';
-import './css/login.css';
+import '../css/login.css';
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { auth } from './firebase';
-import logo from './images/logo_google.png'; 
+import { auth } from '../firebase';
+import logo from '../images/logo_google.png'; 
 
 
 const LoginScreen = () => {
