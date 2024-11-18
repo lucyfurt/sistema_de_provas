@@ -1,4 +1,3 @@
-// src/screens/AddProvaScreen.js
 import React, { useState } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
@@ -8,33 +7,61 @@ const AddProvaScreen = () => {
   const [titulo, setTitulo] = useState('');
   const [descricao, setDescricao] = useState('');
   const [disciplina, setDisciplina] = useState('');
-  const [questoes, setQuestoes] = useState([{ pergunta: '', opcoes: ['', '', '', ''], correta: '' }]);
+  const [questoes, setQuestoes] = useState([{ id: Date.now(), pergunta: '', opcoes: ['', '', '', ''], correta: '' }]);
 
+  // Adiciona uma nova questão
   const handleAddQuestao = () => {
-    setQuestoes([...questoes, { pergunta: '', opcoes: ['', '', '', ''], correta: '' }]);
+    setQuestoes([
+      ...questoes,
+      { id: Date.now(), pergunta: '', opcoes: ['', '', '', ''], correta: '' },
+    ]);
   };
 
-  const handleQuestaoChange = (index, field, value) => {
-    const novasQuestoes = [...questoes];
-    if (field === 'pergunta') {
-      novasQuestoes[index].pergunta = value;
-    } else if (field === 'correta') {
-      novasQuestoes[index].correta = value;
-    } else {
-      novasQuestoes[index].opcoes[field] = value;
+  // Atualiza campos específicos de uma questão
+  const handleQuestaoChange = (id, field, value) => {
+    setQuestoes(questoes.map((questao) => {
+      if (questao.id === id) {
+        if (field === 'pergunta') {
+          return { ...questao, pergunta: value };
+        } else if (field === 'correta') {
+          return { ...questao, correta: value };
+        } else {
+          const novasOpcoes = [...questao.opcoes];
+          novasOpcoes[field] = value;
+          return { ...questao, opcoes: novasOpcoes };
+        }
+      }
+      return questao;
+    }));
+  };
+
+  // Valida o formulário antes de salvar
+  const validarFormulario = () => {
+    if (!titulo.trim()) return 'O título da prova é obrigatório.';
+    if (!descricao.trim()) return 'A descrição da prova é obrigatória.';
+    if (!disciplina.trim()) return 'A disciplina da prova é obrigatória.';
+
+    for (const [index, questao] of questoes.entries()) {
+      if (!questao.pergunta.trim()) return `A pergunta ${index + 1} está em branco.`;
+      if (questao.opcoes.some((op) => !op.trim())) return `A pergunta ${index + 1} tem opções em branco.`;
+      if (!questao.correta.trim()) return `A pergunta ${index + 1} não tem uma resposta correta.`;
+      if (!questao.opcoes.includes(questao.correta)) return `A resposta correta da pergunta ${index + 1} deve estar entre as opções.`;
     }
-    setQuestoes(novasQuestoes);
+
+    return null;
   };
 
+  // Envia o formulário para o Firestore
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!titulo || !descricao || !disciplina || questoes.some(q => !q.pergunta || !q.correta || q.opcoes.some(op => !op))) {
-      alert('Por favor, preencha todos os campos.');
+    const erro = validarFormulario();
+    if (erro) {
+      alert(erro);
       return;
     }
 
     try {
-      await addDoc(collection(db, 'provas'), {        
+      await addDoc(collection(db, 'provas'), {
         titulo,
         descricao,
         disciplina,
@@ -45,7 +72,7 @@ const AddProvaScreen = () => {
       setTitulo('');
       setDescricao('');
       setDisciplina('');
-      setQuestoes([{ pergunta: '', opcoes: ['', '', '', ''], correta: '' }]);
+      setQuestoes([{ id: Date.now(), pergunta: '', opcoes: ['', '', '', ''], correta: '' }]);
     } catch (error) {
       console.error('Erro ao adicionar a prova:', error);
       alert('Erro ao adicionar a prova. Tente novamente.');
@@ -75,20 +102,21 @@ const AddProvaScreen = () => {
         </div>
         <div className="form-group">
           <label>Disciplina</label>
-          <textarea
+          <input
+            type="text"
             value={disciplina}
             onChange={(e) => setDisciplina(e.target.value)}
-            placeholder="Disciplina"
+            placeholder="Digite a disciplina"
           />
         </div>
         <div className="questoes-container">
           {questoes.map((questao, index) => (
-            <div key={index} className="questao-item">
+            <div key={questao.id} className="questao-item">
               <label>Pergunta {index + 1}</label>
               <input
                 type="text"
                 value={questao.pergunta}
-                onChange={(e) => handleQuestaoChange(index, 'pergunta', e.target.value)}
+                onChange={(e) => handleQuestaoChange(questao.id, 'pergunta', e.target.value)}
                 placeholder="Digite a pergunta"
               />
               <div className="opcoes-container">
@@ -97,7 +125,7 @@ const AddProvaScreen = () => {
                     key={opcaoIndex}
                     type="text"
                     value={opcao}
-                    onChange={(e) => handleQuestaoChange(index, opcaoIndex, e.target.value)}
+                    onChange={(e) => handleQuestaoChange(questao.id, opcaoIndex, e.target.value)}
                     placeholder={`Opção ${opcaoIndex + 1}`}
                   />
                 ))}
@@ -106,7 +134,7 @@ const AddProvaScreen = () => {
               <input
                 type="text"
                 value={questao.correta}
-                onChange={(e) => handleQuestaoChange(index, 'correta', e.target.value)}
+                onChange={(e) => handleQuestaoChange(questao.id, 'correta', e.target.value)}
                 placeholder="Digite a resposta correta"
               />
             </div>

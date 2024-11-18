@@ -17,7 +17,7 @@ const QuestionScreen = ({ questoes, tempoMaximo, onProvaFinalizada }) => {
   const handleChange = (idQuestao, idOpcao) => {
     setRespostas({
       ...respostas,
-      [idQuestao]: idOpcao,
+      [idQuestao]: idOpcao, // Associa a questão à opção selecionada
     });
   };
 
@@ -36,7 +36,7 @@ const QuestionScreen = ({ questoes, tempoMaximo, onProvaFinalizada }) => {
     <div className="question-screen">
       <h2>Prova de {questoes[0]?.disciplina || "História"}</h2>
       <div className="timer">Tempo restante: {formatarTempo(tempoRestante)}</div>
-      
+
       {questoes.map((questao) => (
         <div key={questao.id} className="question">
           <h3>{questao.pergunta}</h3>
@@ -44,7 +44,8 @@ const QuestionScreen = ({ questoes, tempoMaximo, onProvaFinalizada }) => {
             {questao.opcoes.map((opcao, index) => (
               <label key={index} className="option">
                 <input
-                  type="checkbox"
+                  type="radio"
+                  name={`questao-${questao.id}`} // Nome único para cada questão
                   checked={respostas[questao.id] === opcao}
                   onChange={() => handleChange(questao.id, opcao)}
                 />
@@ -54,7 +55,7 @@ const QuestionScreen = ({ questoes, tempoMaximo, onProvaFinalizada }) => {
           </div>
         </div>
       ))}
-      
+
       <button onClick={finalizarProva} className="finish-button">Finalizar Prova</button>
     </div>
   );
