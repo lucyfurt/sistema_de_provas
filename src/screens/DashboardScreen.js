@@ -3,6 +3,7 @@ import Sidebar from '../components/Sidebar';
 import AddProvaScreen from './AddProvaScreen';
 import AlunosNotasScreen from './AlunosNotasScreen';
 import VisaoGeralDashboard from './VisaoGeralDashboard';
+import ProvasDashboard from './ProvasDashboard';
 
 const Dashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState('overview');
@@ -11,6 +12,8 @@ const Dashboard = () => {
     switch (selectedMenu) {
       case 'addProva':
         return <AddProvaScreen />;
+      case'listarProvas':
+      return <ProvasDashboard />;
       case 'listarNotas':
         return <AlunosNotasScreen />;
       case 'overview':
