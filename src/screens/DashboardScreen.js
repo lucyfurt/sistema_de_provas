@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import AddProvaScreen from './AddProvaScreen';
 import AlunosNotasScreen from './AlunosNotasScreen';
+import VisaoGeralDashboard from './VisaoGeralDashboard';
 
 const Dashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState('overview');
@@ -13,8 +14,8 @@ const Dashboard = () => {
       case 'listarNotas':
         return <AlunosNotasScreen />;
       case 'overview':
-        return <div>Visão Geral do Dashboard</div>;
-      default:
+        return <VisaoGeralDashboard/>
+              default:
         return <div>Selecione uma opção no menu</div>;
     }
   };
